@@ -3,13 +3,26 @@
  * CS 321
  * Main class for Taskify that will use functions from other classes.
  */
+
+ /**
+  * Imports commmands from Commands.js.
+  */
+import { helpCommand } from './Commands.js'
+
+/**
+ * Requires the Discord.js module.
+ */
 const Discord = require('discord.js')
+
+/**
+ * Creates new Discord client.
+ */
 const client = new Discord.Client()
 
 /**
  * Behavior when bot connects.
  */
-client.on('ready', () => {
+client.once('ready', () => {
     console.log("Connected as " + client.user.tag)
 
     client.user.setActivity("CS 321", {type: "WATCHING"});
@@ -29,8 +42,23 @@ client.on('ready', () => {
         // General Text Channel ID: 767998455980752910
     })
 
+    /**
+     * String format of day. 
+     * DD/MM/YY @ HH:MM:SS
+     */
+    var currentDate = new Date()
+    var dateTime = ("Last Sync: " + (currentDate.getMonth()+1)  + "/"
+                + currentDate.getDate() + "/"
+                + currentDate.getFullYear() + " @ "  
+                + currentDate.getHours() + ":"  
+                + currentDate.getMinutes() + ":" 
+                + currentDate.getSeconds())
+    
+    /**
+     * Sends message to text channel when bot logs on.
+     */
     let generalChannel = client.channels.cache.get("767998455980752910")
-    generalChannel.send("Taskify is online.")
+    generalChannel.send("Taskify is online. " + dateTime)
 })
 
 /**
@@ -69,13 +97,13 @@ function processCommand(receivedMessage) {
 /**
  * Help command lists available commands.
  */
-function helpCommand(arguments, receivedMessage) {
-    if (arguments.length > 0) {
-        receivedMessage.channel.send("You need help with `" + arguments + "`")
-    } else {
-        receivedMessage.channel.send("Try `t!help [category]`")
-    }
-}
+//function helpCommand(arguments, receivedMessage) {
+//    if (arguments.length > 0) {
+//        receivedMessage.channel.send("You need help with `" + arguments + "`")
+//    } else {
+//        receivedMessage.channel.send("Try `t!help [category]`")
+//    }
+//}
 
 /**
  * Log-in with the bot using its Token credential.
