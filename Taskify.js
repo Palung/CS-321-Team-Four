@@ -7,7 +7,7 @@
  /**
   * Imports commmands from Commands.js.
   */
-import { helpCommand } from './Commands.js'
+//import { helpCommand } from './Commands.js'
 
 /**
  * Requires the Discord.js module.
@@ -18,6 +18,11 @@ const Discord = require('discord.js')
  * Creates new Discord client.
  */
 const client = new Discord.Client()
+
+/**
+ * Creates a config.json file that contains token and values.
+ */
+const config = require('./config.json')
 
 /**
  * Behavior when bot connects.
@@ -97,13 +102,13 @@ function processCommand(receivedMessage) {
 /**
  * Help command lists available commands.
  */
-//function helpCommand(arguments, receivedMessage) {
-//    if (arguments.length > 0) {
-//        receivedMessage.channel.send("You need help with `" + arguments + "`")
-//    } else {
-//        receivedMessage.channel.send("Try `t!help [category]`")
-//    }
-//}
+function helpCommand(arguments, receivedMessage) {
+    if (arguments.length > 0) {
+        receivedMessage.channel.send("You need help with `" + arguments + "`")
+    } else {
+        receivedMessage.channel.send("Try `t!help [category]`")
+    }
+}
 
 /**
  * Log-in with the bot using its Token credential.

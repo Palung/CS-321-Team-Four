@@ -5,6 +5,7 @@
 /**
  * Help command lists available commands.
  */
+/*
 function helpCommand(arguments, receivedMessage) {
     if (arguments.length > 0) {
         receivedMessage.channel.send("You need help with `" + arguments + "`")
@@ -12,8 +13,8 @@ function helpCommand(arguments, receivedMessage) {
         receivedMessage.channel.send("Try `t!help [category]`")
     }
 }
-
+*/
 /**
  * List of exported commands.
  */
-export { helpCommand }
+//export { helpCommand }
