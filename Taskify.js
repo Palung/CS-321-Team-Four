@@ -22,7 +22,7 @@ const client = new Discord.Client()
 /**
  * Creates a config.json file that contains token and values.
  */
-const config = require('./config.json')
+const {prefix, token} = require('./config.json')
 
 /**
  * Behavior when bot connects.
@@ -80,7 +80,7 @@ client.on('message', (receivedMessage) => {
     /**
      * Reads command with prefix.
      */
-    if (receivedMessage.content.startsWith("t!")) {
+    if (receivedMessage.content.startsWith(prefix)) {
         processCommand(receivedMessage)
     }
 })
@@ -96,22 +96,41 @@ function processCommand(receivedMessage) {
 
     if (primaryCommand == "help") {
         helpCommand(arguments, receivedMessage)
+    } else if (primaryCommand == "server") {
+        serverCommand(receivedMessage)
+    } else if (primaryCommand == "user") {
+        userCommand(receivedMessage)
     }
 }
 
 /**
  * Help command lists available commands.
  */
-function helpCommand(arguments, receivedMessage) {
-    if (arguments.length > 0) {
+
+ function helpCommand(arguments, receivedMessage) {
+    if (arguments.length == 0) {
+        receivedMessage.channel.send("Try `t+help [category]`")
+    } else if (arguments.length == 1) {
         receivedMessage.channel.send("You need help with `" + arguments + "`")
     } else {
-        receivedMessage.channel.send("Try `t!help [category]`")
+        receivedMessage.channel.send("Too many arguments! Only one category!")
     }
+}
+
+/**
+ * Prints out server info.
+ */
+function serverCommand(receivedMessage) {
+    receivedMessage.channel.send(`Server name: ${receivedMessage.guild.name}\nTotal members: ${receivedMessage.guild.memberCount}`)
+}
+
+function userCommand(receivedMessage) {
+    receivedMessage.channel.send(`Your username: ${receivedMessage.author.username}\nYour ID: ${receivedMessage.author.id}`);
+
 }
 
 /**
  * Log-in with the bot using its Token credential.
  */
-client.login("NzY3OTk5MTcxNTgzMjc5MTM0.X46E9w.BlV49zUiGryaCbA5x-AcCXaQjqk");
+client.login(token);
 
