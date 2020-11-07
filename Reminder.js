@@ -38,7 +38,12 @@ class ReminderNode {
      * Converts a task to a string and returns it.
      */
     remind() {
-        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + desscription;
+        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + description;
+        return retString;
+    }
+
+    remindToString() {
+        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + description;
         return retString;
     }
 
@@ -56,10 +61,10 @@ var taskList = [low, medium, high];
  * @param {*} name the name of the task
  * @param {*} dueDate the date the task is due.  Note that this is a "date" object, not some int
  * @param {*} priority the priority level of the task (low, medium, or high)
- * @param {*} desscription anything the user wants to note down that's not the name, dueDate, or priority level
+ * @param {*} description anything the user wants to note down that's not the name, dueDate, or priority level
  */
-function addTask(name, dueDate, priority, desscription) {
-    var newReminder = new ReminderNode(name, dueDate, priority, desscription);
+function addTask(name, dueDate, priority, description) {
+    var newReminder = new ReminderNode(name, dueDate, priority, description);
     var current = taskList[priority];
     var alreadyExists = false;
 
@@ -160,7 +165,7 @@ function listTasks() {
 
         while (current.next != null) {
             current = current.next;
-            retString = retString.concat(current.remind() + "\n");
+            retString = retString.concat(current.remindToString() + "\n");
         }
         retString = retString.concat("--------------------------------------------\n");
     }
@@ -179,7 +184,7 @@ function listTasksPriority(priorityLevel) { // <-  int
 
     while (current.next != null) {
         current = current.next;
-        retString = retString.concat(current.remind() + "\n");
+        retString = retString.concat(current.remindToString() + "\n");
     }
 
     generalChannel.channel.send(retString);
@@ -200,7 +205,7 @@ function listTasksDue(dueDate) { // < - Date
         while (current.next != null) {
             current = current.next;
             if (current.dueDate.getTime() === dueDate.getTime())
-                retString = retString.concat(current.remind() + "\n");
+                retString = retString.concat(current.remindToString() + "\n");
         }
         retString = retString.concat("--------------------------------------------");
     }
@@ -229,7 +234,7 @@ function listTasksDue(firstDate, secondDate) { // < - Dates
         while (current.next != null) {
             current = current.next;
             if (current.dueDate.getTime() >= firstDate.getTime() && current.dueDate.getTime() <= secondDate.getTime())
-                retString = retString.concat(current.remind() + "\n");
+                retString = retString.concat(current.remindToString() + "\n");
         }
         retString = retString.concat("--------------------------------------------");
     }
