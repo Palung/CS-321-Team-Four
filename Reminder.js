@@ -1,16 +1,13 @@
 /**
  * Anh Nguyen, Palung Chandra, Jason Villanueva
  * CS 321
- * Main class for Taskify that will use functions from other classes.
+ * Reminder object class to be called by the Taskify class to take in and store remiders by the user.
  */
-
-
-
 
 
 class ReminderNode {
     /**
-     * 
+     * A reminder's constructor function.
      * @param {*} name the task's name
      * @param {*} dueDate the date a task is due
      * @param {*} priority the priority level of the task
@@ -54,8 +51,6 @@ const high = ReminderNode(-1, 2);
 var taskList = [low, medium, high];
 
 /**
- * TAKE A LOOK AT USER INPUTS, how are users entering the date?  how is this function recieving the date?
- * 
  * Adds a unique task to the taskList based on user input,
  * (i.e. name; dueDate; priority; description).
  * @param {*} name the name of the task
@@ -71,7 +66,7 @@ function addTask(name, dueDate, priority, desscription) {
     while (current != null) {
 
         // if the task attempting to be added is already in the tasklist
-        if (current.id == newReminder.id) {
+        if (current.id === newReminder.id) {
             alreadyExists = true;
             break;
         }
@@ -93,9 +88,6 @@ function addTask(name, dueDate, priority, desscription) {
 
 
 /**
- * STILL NEED TO UTILIZE PRINT STATEMENTS (look up how to do that with Discord Bots)
- * 
- * 
  * Removes a task based on user input (the task's id) and 
  * prints out that it was removed.  If it's not found, then
  * print out a statement saying it couldn't be found.
@@ -131,7 +123,7 @@ function removeTask(id) {
             while (current != null) {
 
                 // if we found the remider we're looking for, remove it:
-                if (current.id = id) {
+                if (current.id === id) {
                     prev.next = current.next;
                     rmNode = current;
                     removed = true;
@@ -170,9 +162,10 @@ function listTasks() {
             current = current.next;
             retString = retString.concat(current.remind() + "\n");
         }
-        retString = retString.concat("--------------------------------------------");
+        retString = retString.concat("--------------------------------------------\n");
     }
 
+    generalChannel.channel.send(retString);
     return retString;
 }
 
@@ -189,41 +182,62 @@ function listTasksPriority(priorityLevel) { // <-  int
         retString = retString.concat(current.remind() + "\n");
     }
 
-    // figure out how to print the string via discord bot
+    generalChannel.channel.send(retString);
     return retString;
 }
 
 /**
- * prints out all tasks due ON the dueDate
+ * prints out all tasks due ON the dueDate.
  * @param {} dueDate the date the user wants to look up
  */
 function listTasksDue(dueDate) { // < - Date
     var retString = "All tasks that are due on" + dueDate + ": ";
+    var originalRetString = "All tasks that are due on" + dueDate + ": ";
 
     for (var x = 0; x < taskList.length; x++) {
         var current = taskList[x];
 
         while (current.next != null) {
             current = current.next;
-            if (current.dueDate.getTime() == dueDate.getTime())
+            if (current.dueDate.getTime() === dueDate.getTime())
                 retString = retString.concat(current.remind() + "\n");
         }
         retString = retString.concat("--------------------------------------------");
     }
 
-    if (retString == "All tasks that are due on" + dueDate + ": ") {
+    if (retString === originalRetString) {
         retStirng = "There are no tasks due on" + dueDate;
     }
 
+    generalChannel.channel.send(retString);
     return retString;
 }
 
 /**
- * prints all tasks between the first date and the second date
+ * prints all tasks between the first date and the second date.
  * 
  * @param {} firstDate
  * @param {} secondDate
  */
 function listTasksDue(firstDate, secondDate) { // < - Dates
+    var retString = "All tasks that are due between " + firstDate + " and " + secondDate + ":";
+    var originalRetString = "All tasks that are due between " + firstDate + " and " + secondDate + ":";
 
+    for (var x = 0; x < taskList.length; x++) {
+        var current = taskList[x];
+
+        while (current.next != null) {
+            current = current.next;
+            if (current.dueDate.getTime() >= firstDate.getTime() && current.dueDate.getTime() <= secondDate.getTime())
+                retString = retString.concat(current.remind() + "\n");
+        }
+        retString = retString.concat("--------------------------------------------");
+    }
+
+    if (retString === originalRetString) {
+        retStirng = "There are no tasks due between: " + firstDate + " and " + secondDate;
+    }
+
+    generalChannel.channel.send(retString);
+    return retString;
 }
