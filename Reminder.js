@@ -12,14 +12,16 @@ class ReminderNode {
      * @param {*} dueDate the date a task is due
      * @param {*} priority the priority level of the task
      * @param {*} description the optional description of a task
-     * 
+     * @param {*} roles the set of roles that need to be aware of the task
      */
-    constructor(name, dueDate, priority, description) {
+    constructor(name, dueDate, priority, description, roles) {
         this.name = name;
         this.dueDate = dueDate;
         this.priority = priority;
         this.description = description;
+        this.roles = roles;
 
+        // makes a unique id 
         id = function() {
             var hash = 0;
             for (var x = 0; x < this.length; x++) {
@@ -38,14 +40,11 @@ class ReminderNode {
      * Converts a task to a string and returns it.
      */
     remind() {
-        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + description;
+        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + description + "\t\t" + roles;
         return retString;
     }
 
-    remindToString() {
-        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + description;
-        return retString;
-    }
+
 
 }
 
@@ -62,9 +61,10 @@ var taskList = [low, medium, high];
  * @param {*} dueDate the date the task is due.  Note that this is a "date" object, not some int
  * @param {*} priority the priority level of the task (low, medium, or high)
  * @param {*} description anything the user wants to note down that's not the name, dueDate, or priority level
+ * @param {*} roles the set of roles that need to be aware of the task
  */
-function addTask(name, dueDate, priority, description) {
-    var newReminder = new ReminderNode(name, dueDate, priority, description);
+function addTask(name, dueDate, priority, description, roles) {
+    var newReminder = new ReminderNode(name, dueDate, priority, description, roles);
     var current = taskList[priority];
     var alreadyExists = false;
 
@@ -101,20 +101,6 @@ function addTask(name, dueDate, priority, description) {
 function removeTask(id) {
     var removed = false;
     var rmNode = undefined;
-    /**
-     * iterate through each taskList's list of nodes at each positon
-     *   for(z -> taskList.length){
-     *     if(!removed) // if the current item is not found
-     *       search taskList[z]
-     *         if(id = current.id)
-     *           remove it; removed = true;
-     *   }
-     * 
-     *   if(!removed)
-     *    print a message saying that it's not found
-     *   else
-     *    print a message saying it was removed
-     */
 
     for (var z = 0; z < taskList.length; z++) {
         // prev starts at the head, since the head is 
@@ -165,7 +151,7 @@ function listTasks() {
 
         while (current.next != null) {
             current = current.next;
-            retString = retString.concat(current.remindToString() + "\n");
+            retString = retString.concat(current.remind() + "\n");
         }
         retString = retString.concat("--------------------------------------------\n");
     }
@@ -184,7 +170,7 @@ function listTasksPriority(priorityLevel) { // <-  int
 
     while (current.next != null) {
         current = current.next;
-        retString = retString.concat(current.remindToString() + "\n");
+        retString = retString.concat(current.remind() + "\n");
     }
 
     generalChannel.channel.send(retString);
@@ -205,7 +191,7 @@ function listTasksDue(dueDate) { // < - Date
         while (current.next != null) {
             current = current.next;
             if (current.dueDate.getTime() === dueDate.getTime())
-                retString = retString.concat(current.remindToString() + "\n");
+                retString = retString.concat(current.remind() + "\n");
         }
         retString = retString.concat("--------------------------------------------");
     }
@@ -234,7 +220,7 @@ function listTasksDue(firstDate, secondDate) { // < - Dates
         while (current.next != null) {
             current = current.next;
             if (current.dueDate.getTime() >= firstDate.getTime() && current.dueDate.getTime() <= secondDate.getTime())
-                retString = retString.concat(current.remindToString() + "\n");
+                retString = retString.concat(current.remind() + "\n");
         }
         retString = retString.concat("--------------------------------------------");
     }
