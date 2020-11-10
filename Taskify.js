@@ -13,11 +13,22 @@
  * Requires the Discord.js module.
  */
 const Discord = require('discord.js')
+const fs = require('fs')
 
 /**
  * Creates new Discord client.
  */
 const client = new Discord.Client()
+client.commands = new Discord.Collection()
+const commandFiles = fs.readdirSync('./Commands').filter(file => file.endsWith('.js'))
+
+/**
+ * Set above commands to Collection.
+ */
+for (const file of commandFiles) {
+	const command = require(`./Commands/${file}`)
+	client.commands.set(command.name, command)
+}
 
 /**
  * Creates a config.json file that contains token and values.
@@ -62,14 +73,16 @@ client.once('ready', () => {
     /**
      * Sends message to text channel when bot logs on.
      */
-    let generalChannel = client.channels.cache.get("767998455980752910")
-    generalChannel.send("Taskify is online. " + dateTime)
+    //let generalChannel = client.channels.cache.get("767998455980752910")
+    //generalChannel.send("Taskify is online. " + dateTime)
+    receivedMessage.channel.send("Taskify is online. " + dateTime)
 })
 
 /**
  * Behavior when bot receives and sends a message.
  */
 client.on('message', (receivedMessage) => {
+    console.log(receivedMessage.content)
     /**
      * Checks if a message is from the bot.
      */
@@ -80,6 +93,7 @@ client.on('message', (receivedMessage) => {
     /**
      * Reads command with prefix.
      */
+    
     if (receivedMessage.content.startsWith(prefix)) {
         processCommand(receivedMessage)
     }
@@ -88,25 +102,58 @@ client.on('message', (receivedMessage) => {
 /**
  * Processes command from text.
  */
+
 function processCommand(receivedMessage) {
+    /*
     let fullCommand = receivedMessage.content.substr(2)
     let splitCommand = fullCommand.split(" ")
     let primaryCommand = splitCommand[0]
     let arguments = splitCommand.slice(1)
 
+
     if (primaryCommand == "help") {
         helpCommand(arguments, receivedMessage)
     } else if (primaryCommand == "server") {
-        serverCommand(receivedMessage)
+        client.commands.get('server').execute(receivedMessage)
     } else if (primaryCommand == "user") {
-        userCommand(receivedMessage)
+        client.commands.get('user').execute(receivedMessage)
+    } else if (primaryCommand == "remind") {
+        client.commands.get('remind').execute(receivedMessage)
+        */
+    const args = receivedMessage.content.slice(prefix.length).trim().split(/ +/)
+    const commandName = args.shift().toLowerCase()
+
+    const command = client.commands.get(commandName)
+        || client.commands.find(cmd => cmd.aliases && cmd.alises.includes(commandName))
+
+    if (!command) return
+
+    if (command.guildOnly && message.channel.type === 'dm') {
+        return message.reply('I can\'t execute that command inside private messages!');
     }
-}
+
+    if (command.args && !args.length) {
+        let reply = "You need arguments!"
+        if (command.usage) {
+            reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``
+
+        }
+        return receivedMessage.channel.send(reply)
+    }
+
+    try {
+        command.execute(receivedMessage)
+    } catch (error) {
+        console.error(error)
+        receivedMessage.reply('There\'s an error with that command.')
+    }
+} 
 
 /**
  * Help command lists available commands.
  */
 
+/*
  function helpCommand(arguments, receivedMessage) {
     if (arguments.length == 0) {
         receivedMessage.channel.send("Try `t+help [category]`")
@@ -117,17 +164,21 @@ function processCommand(receivedMessage) {
     }
 }
 
-/**
- * Prints out server info.
- */
 function serverCommand(receivedMessage) {
     receivedMessage.channel.send(`Server name: ${receivedMessage.guild.name}\nTotal members: ${receivedMessage.guild.memberCount}`)
 }
 
 function userCommand(receivedMessage) {
-    receivedMessage.channel.send(`Your username: ${receivedMessage.author.username}\nYour ID: ${receivedMessage.author.id}`);
-
+    receivedMessage.channel.send(`Your username: ${receivedMessage.author.username}\nYour ID: ${receivedMessage.author.id}`)
 }
+
+function remindCommand(receivedMessage) {
+    if (!receivedMessage.mentions.users.size) {
+        return receivedMessage.reply(`You must tag a user to remind them!`)
+    }
+    const tagged = receivedMessage.mentions.users.first();
+    receivedMessage.channel.send(`Reminder set for ${tagged.username}!`)
+} */
 
 /**
  * Log-in with the bot using its Token credential.
