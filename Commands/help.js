@@ -3,7 +3,7 @@ const { prefix } = require('../config.json')
 module.exports = {
     name: 'help',
     aliases: ['h', 'commands'],
-    description: 'Sets a Reminder for mentioned user. If none mentioned, set Reminder for author.',
+    description: 'Lists all commands. If specific command, lists its functionality.',
     execute(receivedMessage, args) {
         const data = [];
         const { commands } = message.client;
