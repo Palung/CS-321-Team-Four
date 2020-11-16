@@ -4,11 +4,6 @@
  * Main class for Taskify that will use functions from other classes.
  */
 
- /**
-  * Imports commmands from Commands.js.
-  */
-//import { helpCommand } from './Commands.js'
-
 /**
  * Requires the Discord.js module.
  */
@@ -102,24 +97,7 @@ client.on('message', (receivedMessage) => {
 /**
  * Processes command from text.
  */
-
 function processCommand(receivedMessage) {
-    /*
-    let fullCommand = receivedMessage.content.substr(2)
-    let splitCommand = fullCommand.split(" ")
-    let primaryCommand = splitCommand[0]
-    let arguments = splitCommand.slice(1)
-
-
-    if (primaryCommand == "help") {
-        helpCommand(arguments, receivedMessage)
-    } else if (primaryCommand == "server") {
-        client.commands.get('server').execute(receivedMessage)
-    } else if (primaryCommand == "user") {
-        client.commands.get('user').execute(receivedMessage)
-    } else if (primaryCommand == "remind") {
-        client.commands.get('remind').execute(receivedMessage)
-        */
     const args = receivedMessage.content.slice(prefix.length).trim().split(/ +/)
     const commandName = args.shift().toLowerCase()
 
@@ -148,37 +126,6 @@ function processCommand(receivedMessage) {
         receivedMessage.reply('There\'s an error with that command.')
     }
 } 
-
-/**
- * Help command lists available commands.
- */
-
-/*
- function helpCommand(arguments, receivedMessage) {
-    if (arguments.length == 0) {
-        receivedMessage.channel.send("Try `t+help [category]`")
-    } else if (arguments.length == 1) {
-        receivedMessage.channel.send("You need help with `" + arguments + "`")
-    } else {
-        receivedMessage.channel.send("Too many arguments! Only one category!")
-    }
-}
-
-function serverCommand(receivedMessage) {
-    receivedMessage.channel.send(`Server name: ${receivedMessage.guild.name}\nTotal members: ${receivedMessage.guild.memberCount}`)
-}
-
-function userCommand(receivedMessage) {
-    receivedMessage.channel.send(`Your username: ${receivedMessage.author.username}\nYour ID: ${receivedMessage.author.id}`)
-}
-
-function remindCommand(receivedMessage) {
-    if (!receivedMessage.mentions.users.size) {
-        return receivedMessage.reply(`You must tag a user to remind them!`)
-    }
-    const tagged = receivedMessage.mentions.users.first();
-    receivedMessage.channel.send(`Reminder set for ${tagged.username}!`)
-} */
 
 /**
  * Log-in with the bot using its Token credential.
