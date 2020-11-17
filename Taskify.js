@@ -8,7 +8,29 @@
  * Requires the Discord.js module.
  */
 const Discord = require('discord.js')
+
+/**
+ * Requires the File System (FS) module to import external modules..
+ */
 const fs = require('fs')
+
+/**
+ * Read exported modules.
+ */
+/**const path = '.'
+fs.readdir(path, (err, files) => {
+    files.forEach(file => {
+        console.log(file)
+    })
+})
+
+const user = require('./Reminder')
+console.log(`User: ${user.addTask}`);
+console.log(`User: ${user.removeTask}`);
+console.log(`User: ${user.listTasks}`);
+console.log(`User: ${user.listTasksPriority}`);
+console.log(`User: ${user.listTasksDue}`);*/
+
 
 /**
  * Creates new Discord client.
@@ -68,9 +90,9 @@ client.once('ready', () => {
     /**
      * Sends message to text channel when bot logs on.
      */
-    //let generalChannel = client.channels.cache.get("767998455980752910")
-    //generalChannel.send("Taskify is online. " + dateTime)
-    receivedMessage.channel.send("Taskify is online. " + dateTime)
+    let generalChannel = client.channels.cache.get("767998455980752910")
+    generalChannel.send("Taskify is online. " + dateTime)
+    //channel.send("Taskify is online. " + dateTime)
 })
 
 /**
@@ -88,7 +110,7 @@ client.on('message', (receivedMessage) => {
     /**
      * Reads command with prefix.
      */
-    
+
     if (receivedMessage.content.startsWith(prefix)) {
         processCommand(receivedMessage)
     }
@@ -102,7 +124,7 @@ function processCommand(receivedMessage) {
     const commandName = args.shift().toLowerCase()
 
     const command = client.commands.get(commandName)
-        || client.commands.find(cmd => cmd.aliases && cmd.alises.includes(commandName))
+        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
     if (!command) return
 
@@ -120,7 +142,7 @@ function processCommand(receivedMessage) {
     }
 
     try {
-        command.execute(receivedMessage)
+        command.execute(receivedMessage, args)
     } catch (error) {
         console.error(error)
         receivedMessage.reply('There\'s an error with that command.')

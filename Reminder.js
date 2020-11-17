@@ -22,7 +22,7 @@ class ReminderNode {
         this.roles = roles;
 
         // makes a unique id 
-        id = function() {
+        let id = function() {
             var hash = 0;
             for (var x = 0; x < this.length; x++) {
                 var character = this.charCodeAt(x);
@@ -48,9 +48,9 @@ class ReminderNode {
 
 }
 
-const low = ReminderNode(-1, 0);
-const medium = ReminderNode(-1, 1);
-const high = ReminderNode(-1, 2);
+const low = new ReminderNode(-1, 0);
+const medium = new ReminderNode(-1, 1);
+const high = new ReminderNode(-1, 2);
 
 var taskList = [low, medium, high];
 
@@ -89,6 +89,7 @@ function addTask(name, dueDate, priority, description, roles) {
         generalChannel.channel.send("This task already exists!");
     }
     generalChannel.channel.send(name + " has been added.");
+    return 'addTask';
 }
 
 
@@ -134,9 +135,10 @@ function removeTask(id) {
     // print out a message saying that the desired item never existed in the first place
     else {
         generalChannel.channel.send("Could not find the task with the id of: " + id);
-        return;
+        //return;
+        return 'removedTask';
     }
-
+    
 }
 
 
@@ -157,7 +159,8 @@ function listTasks() {
     }
 
     generalChannel.channel.send(retString);
-    return retString;
+    //return retString;
+    return 'listTasks';
 }
 
 /**
@@ -174,7 +177,8 @@ function listTasksPriority(priorityLevel) { // <-  int
     }
 
     generalChannel.channel.send(retString);
-    return retString;
+    //return retString;
+    return 'listTaskPriority';
 }
 
 /**
@@ -201,7 +205,8 @@ function listTasksDue(dueDate) { // < - Date
     }
 
     generalChannel.channel.send(retString);
-    return retString;
+    //return retString;
+    return 'listTasksDueDate';
 }
 
 /**
@@ -230,5 +235,21 @@ function listTasksDue(firstDate, secondDate) { // < - Dates
     }
 
     generalChannel.channel.send(retString);
-    return retString;
+    //return retString;
+    return 'listTasksDueRange';
+}
+
+/*
+module.exports.addTask = addTask
+module.exports.removeTask = removeTask
+module.exports.listTasks = listTasks
+module.exports.listTasksPriority = listTasksPriority
+module.exports.listTasksDue = listTasksDue */
+
+module.exports = {
+    addTask: addTask,
+    removeTask: removeTask,
+    listTasks: listTasks,
+    listTasksPriority: listTasksPriority,
+    listTasksDue: listTasksDue
 }
