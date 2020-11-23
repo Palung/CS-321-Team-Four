@@ -33,6 +33,23 @@ class ReminderNode {
         }
 
         this.next = null;
+
+    }
+
+    /**
+     * Sends a reminder to the users 7 days before something is due
+     */
+    timedReminder() {
+        var days = new Date()
+        var currentTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 0, 0, 0) - dueDate - 7;
+
+        if (currentTime < 0) {
+            currentTime += 86400000; // it's after 10am, try 10am tomorrow.
+        } else {
+            return Promise.delay(1000).then(() => timedReminder());
+        }
+
+        return setTimeout(function() { alert(remind()) }, currentTime);
     }
 
 
@@ -40,11 +57,9 @@ class ReminderNode {
      * Converts a task to a string and returns it.
      */
     remind() {
-        var retString = id + "\t\t" + name + "\t\t" + dueDate + "\t\t" + priority + "\t\t" + description + "\t\t" + roles;
+        var retString = id + "\t" + name + "\t" + dueDate + "\t" + priority + "\t" + description + "\t" + roles;
         return retString;
     }
-
-
 
 }
 
@@ -138,7 +153,7 @@ function removeTask(id) {
         //return;
         return 'removedTask';
     }
-    
+
 }
 
 
@@ -238,6 +253,9 @@ function listTasksDue(firstDate, secondDate) { // < - Dates
     //return retString;
     return 'listTasksDueRange';
 }
+
+
+
 
 /*
 module.exports.addTask = addTask
